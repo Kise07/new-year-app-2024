@@ -6,7 +6,7 @@ const port = 3000;
 
 app.use(express.json());
 
-app.get('/todo', async function (req, res) {
+app.post('/todo', async function (req, res) {
   const createPayload = req.body;
   const parsedPayload = createTodo.safeParse(createPayload);
   if (!parsedPayload.success) {
