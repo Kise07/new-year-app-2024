@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import './App.css'
@@ -8,16 +8,28 @@ import { Todos } from './components/Todos'
 function App() {
   const [todos, setTodos] = useState([]);
 
-  fetch('http://localhost:3000/todos')
-    .then(async function (res) {
-      const json = await res.json();
-      setTodos(json.todos);
-    })
+  useEffect(() => {
+    fetch('http://localhost:3000/todos')
+      .then(async function (res) {
+        const json = await res.json();
+        setTodos(json.todos);
+      })
+  }, []);
+
+  function markCompleted(id) {
+    setTodos(prevTodo =>
+      prevTodo.map(todo =>
+        todo._id === id
+          ? { ...todo, completed: true }
+          : todo
+      )
+    );
+  }
 
   return (
     <div>
       <CreateTodo></CreateTodo>
-      <Todos todos={todos}></Todos>
+      <Todos todos={todos} onComplete={markCompleted}></Todos>
     </div>
   )
 }
